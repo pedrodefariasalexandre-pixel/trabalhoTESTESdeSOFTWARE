@@ -78,8 +78,8 @@ sudo apt update && sudo apt install -y openjdk-21-jdk maven
 ## Instalação
 
 ```bash
-git clone https://github.com/<usuario>/<repositorio>.git
-cd <repositorio>
+git clone https://github.com/pedrodefariasalexandre-pixel/trabalhoTESTESdeSOFTWARE.git
+cd trabalhoTESTESdeSOFTWARE
 mvn -B test-compile        # baixa as dependências e compila (só na primeira vez demora)
 ```
 
