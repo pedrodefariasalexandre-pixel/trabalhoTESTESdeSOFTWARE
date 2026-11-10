@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Log do console: uma linha por requisição HTTP (INFO).
+     Para ver headers use DEBUG; para ver o corpo completo use TRACE no logger "karate.http".
+     O relatório HTML sempre traz request/response completos, independente deste nível. -->
+<configuration>
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{20} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="karate" level="INFO"/>
+    <logger name="io.karatelabs" level="INFO"/>
+
+    <root level="WARN">
+        <appender-ref ref="STDOUT"/>
+    </root>
+</configuration>

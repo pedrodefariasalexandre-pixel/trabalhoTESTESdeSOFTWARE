@@ -1,0 +1,17 @@
+{
+  "id": "#number",
+  "username": "#string",
+  "email": "#regex .+@.+\\..+",
+  "firstName": "#string",
+  "lastName": "#string",
+  "age": "#number",
+  "gender": "#string",
+  "role": "#string",
+  "image": "#string",
+  "address": {
+    "address": "#string",
+    "city": "#string",
+    "country": "#string"
+  },
+  "company": "#object"
+}

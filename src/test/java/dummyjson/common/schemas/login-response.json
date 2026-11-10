@@ -1,0 +1,11 @@
+{
+  "id": "#number",
+  "username": "#string",
+  "email": "#regex .+@.+\\..+",
+  "firstName": "#string",
+  "lastName": "#string",
+  "gender": "#string",
+  "image": "#string",
+  "accessToken": "#regex [\\w-]+\\.[\\w-]+\\.[\\w-]+",
+  "refreshToken": "#string"
+}

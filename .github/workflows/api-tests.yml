@@ -1,0 +1,70 @@
+name: API Tests (Karate)
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+  workflow_dispatch:          # botão "Run workflow" na aba Actions (útil no Plano B da demo)
+    inputs:
+      tags:
+        description: 'Filtro de tags do Karate (ex.: @smoke). Vazio = suíte completa'
+        required: false
+        default: ''
+
+permissions:
+  contents: read
+  checks: write               # necessário para o test-reporter publicar o resultado na aba "Checks"
+
+concurrency:
+  group: api-tests-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  api-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    env:
+      BASE_URL: https://dummyjson.com
+      # Credenciais públicas de teste da DummyJSON. Em um projeto real viriam de
+      # Settings > Secrets and variables > Actions (ex.: ${{ secrets.API_PASSWORD }}).
+      DUMMYJSON_USERNAME: ${{ secrets.DUMMYJSON_USERNAME || 'emilys' }}
+      DUMMYJSON_PASSWORD: ${{ secrets.DUMMYJSON_PASSWORD || 'emilyspass' }}
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v7
+
+      - name: Instalar Java 21 (com cache do Maven)
+        uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+
+      - name: Executar testes de API
+        env:
+          TAGS: ${{ inputs.tags }}   # via variável (e não direto no script) para evitar script injection
+        run: |
+          if [ -n "$TAGS" ]; then
+            mvn -B test -Dkarate.options="--tags $TAGS"
+          else
+            mvn -B test
+          fi
+
+      - name: Publicar relatório HTML do Karate (artifact)
+        if: always()          # publica mesmo quando algum teste falha
+        uses: actions/upload-artifact@v7
+        with:
+          name: karate-report
+          path: target/karate-reports/
+          retention-days: 14
+
+      - name: Resumo dos testes na aba Checks
+        if: always()
+        uses: dorny/test-reporter@v3
+        with:
+          name: Resultado Karate
+          path: target/karate-reports/junit-xml/*.xml
+          reporter: java-junit
+          fail-on-error: false

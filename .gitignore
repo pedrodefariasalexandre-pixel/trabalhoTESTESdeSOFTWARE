@@ -1,0 +1,17 @@
+# Saída do Maven e relatórios gerados (o CI publica como artifact)
+target/
+
+# IDEs
+.idea/
+*.iml
+.vscode/
+.settings/
+.project
+.classpath
+
+# Sistema operacional
+.DS_Store
+Thumbs.db
+
+# Variáveis locais (nunca versionar segredos)
+.env
