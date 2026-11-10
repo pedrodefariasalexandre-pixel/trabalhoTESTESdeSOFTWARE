@@ -190,6 +190,7 @@ O arquivo `.github/workflows/api-tests.yml` roda a cada **push** e **pull reques
 
 ## Documentação da apresentação
 
+- [Documentação de testes (casos, rastreabilidade, defeito, execução)](docs/DOCUMENTACAO-DE-TESTES.md)
 - [Plano de execução](docs/PLANO-DE-EXECUCAO.md)
 - [Roteiro dos slides e divisão das falas](docs/APRESENTACAO.md)
 - [Guia de estudo + perguntas do professor](docs/GUIA-DE-ESTUDO.md)
