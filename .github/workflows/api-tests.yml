@@ -47,9 +47,9 @@ jobs:
           TAGS: ${{ inputs.tags }}   # via variável (e não direto no script) para evitar script injection
         run: |
           if [ -n "$TAGS" ]; then
-            mvn -B test -Dkarate.options="--tags $TAGS"
+            ./mvnw -B test -Dkarate.options="--tags $TAGS"
           else
-            mvn -B test
+            ./mvnw -B test
           fi
 
       - name: Publicar relatório HTML do Karate (artifact)

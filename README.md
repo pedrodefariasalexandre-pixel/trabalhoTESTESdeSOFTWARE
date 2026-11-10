@@ -16,7 +16,7 @@ Ela cobre o fluxo de autenticação (`POST /auth/login` → `accessToken` → `G
 | Karate (`io.karatelabs:karate-junit6`) | 2.1.4 |
 | JUnit Jupiter | 6.1.3 |
 | Java (JDK) | 21 ou superior (**obrigatório** no Karate 2) |
-| Maven | 3.9+ |
+| Maven | 3.9.11 (via Maven Wrapper) |
 
 ## Cenários cobertos
 
@@ -34,6 +34,8 @@ Ela cobre o fluxo de autenticação (`POST /auth/login` → `accessToken` → `G
 ```
 .
 ├── .github/workflows/api-tests.yml     # Pipeline CI: roda a cada push/PR e publica o relatório
+├── mvnw / mvnw.cmd                     # Maven Wrapper: roda o Maven sem instalar
+├── rodar-no-windows.cmd                # Atalho p/ Windows: providencia o Java 21 e roda a suíte
 ├── pom.xml                             # Dependências (Karate, JUnit, Logback) e plugins Maven
 ├── .env.example                        # Nomes das variáveis de ambiente aceitas
 ├── docs/                               # Material da apresentação (roteiro, guia de estudo, plano B...)
@@ -55,23 +57,22 @@ Ela cobre o fluxo de autenticação (`POST /auth/login` → `accessToken` → `G
 ## Pré-requisitos
 
 - **JDK 21+**: confira com `java -version` ([Temurin](https://adoptium.net) recomendado)
-- **Maven 3.9+**: confira com `mvn -v` ([download](https://maven.apache.org/download.cgi))
+- **Maven: não precisa instalar.** O projeto traz o Maven Wrapper (`mvnw`), que baixa o Maven sozinho na primeira execução. Se você já tem o Maven 3.9+, pode trocar `./mvnw` por `mvn` nos comandos.
 - **Git**
 - Acesso à internet (a API é pública: https://dummyjson.com)
 
 <details>
-<summary>Instalação rápida do JDK e do Maven</summary>
+<summary>Instalação do JDK (quando você é administrador da máquina)</summary>
 
 **Windows (PowerShell, com winget):**
 ```powershell
 winget install EclipseAdoptium.Temurin.21.JDK
-winget install Apache.Maven
 ```
 Feche e reabra o terminal depois de instalar.
 
 **Linux (Ubuntu/Debian):**
 ```bash
-sudo apt update && sudo apt install -y openjdk-21-jdk maven
+sudo apt update && sudo apt install -y openjdk-21-jdk
 ```
 </details>
 
@@ -80,29 +81,46 @@ sudo apt update && sudo apt install -y openjdk-21-jdk maven
 ```bash
 git clone https://github.com/pedrodefariasalexandre-pixel/trabalhoTESTESdeSOFTWARE.git
 cd trabalhoTESTESdeSOFTWARE
-mvn -B test-compile        # baixa as dependências e compila (só na primeira vez demora)
+
 ```
 
 ## Como executar
 
-**Suíte completa** (Windows e Linux):
+### Windows (inclusive computador de laboratório, sem instalar nada)
+
+No Prompt de Comando, dentro da pasta do projeto:
+```bat
+rodar-no-windows.cmd
+```
+O script confere se há Java 21. Se não houver, baixa um JDK portátil para a pasta do usuário (não precisa de administrador), e então roda a suíte com o Maven Wrapper. A primeira execução demora alguns minutos por causa dos downloads.
+
+Com filtro (os argumentos são repassados ao Maven):
+```bat
+rodar-no-windows.cmd "-Dkarate.options=--tags @smoke"
+```
+
+Se a máquina já tem Java 21, também funciona direto: `mvnw.cmd test`.
+
+### Linux / macOS
+
+**Suíte completa:**
 ```bash
-mvn test
+./mvnw test
 ```
 
 **Só os testes de fumaça (`@smoke`):**
 ```bash
-mvn test "-Dkarate.options=--tags @smoke"
+./mvnw test "-Dkarate.options=--tags @smoke"
 ```
 
 **Um arquivo específico:**
 ```bash
-mvn test "-Dkarate.options=classpath:dummyjson/auth/login.feature"
+./mvnw test "-Dkarate.options=classpath:dummyjson/auth/login.feature"
 ```
 
 **Ignorando o cenário de defeito conhecido:**
 ```bash
-mvn test "-Dkarate.options=--tags ~@defeito-conhecido"
+./mvnw test "-Dkarate.options=--tags ~@defeito-conhecido"
 ```
 
 ### Variáveis de ambiente (opcional)
@@ -157,7 +175,7 @@ Também é gerado **JUnit XML** em `target/karate-reports/junit-xml/`, que o CI 
 O arquivo `.github/workflows/api-tests.yml` roda a cada **push** e **pull request** e também manualmente (aba *Actions* → *API Tests (Karate)* → *Run workflow*, com filtro opcional de tags). Os passos são:
 
 1. Instala o Java 21 com cache do Maven.
-2. Executa `mvn test`. Se algum cenário falhar, o job fica **vermelho**.
+2. Executa `./mvnw test`. Se algum cenário falhar, o job fica **vermelho**.
 3. Publica `target/karate-reports/` como **artifact** `karate-report`. Para baixar: aba *Actions* → abra a execução → seção *Artifacts*.
 4. Publica o resumo dos testes na aba *Checks*.
 
@@ -182,8 +200,7 @@ O arquivo `.github/workflows/api-tests.yml` roda a cada **push** e **pull reques
 
 | Integrante | Responsabilidade na apresentação |
 |---|---|
-| Integrante 1 | Ferramenta: visão geral |
-| Integrante 2 | Configuração e autenticação |
-| Integrante 3 | Cenários e validações |
-| Integrante 4 | Escalabilidade e CI/CD |
-| Integrante 5 | Demo ao vivo e relatório |
+| Leticia Rocha Vaz Franco | A ferramenta: o que é e como funciona |
+| Filipe Barbosa da Silva | Vantagens, limitações, configuração e autenticação |
+| Giovana Alves de Oliveira | Cenários, validações e escalabilidade |
+| Pedro de Farias Alexandre | CI/CD, demo ao vivo e conclusão |
