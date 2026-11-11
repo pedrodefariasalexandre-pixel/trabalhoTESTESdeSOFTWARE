@@ -1,0 +1,105 @@
+{
+  "info": {
+    "name": "DummyJSON - conferência manual",
+    "description": "Conferência manual dos mesmos endpoints cobertos pela suíte Karate. Rode na ordem: 1 -> 2 -> 3 -> 4.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "https://dummyjson.com" },
+    { "key": "username", "value": "emilys" },
+    { "key": "password", "value": "emilyspass" },
+    { "key": "token", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "1 - Login válido (200)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('status 200', () => pm.response.to.have.status(200));",
+              "const body = pm.response.json();",
+              "pm.test('tem accessToken', () => pm.expect(body.accessToken).to.be.a('string'));",
+              "pm.collectionVariables.set('token', body.accessToken);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"username\": \"{{username}}\",\n  \"password\": \"{{password}}\"\n}"
+        },
+        "url": "{{baseUrl}}/auth/login"
+      }
+    },
+    {
+      "name": "2 - GET /auth/me autenticado (200)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('status 200', () => pm.response.to.have.status(200));",
+              "pm.test('username do usuário logado', () => pm.expect(pm.response.json().username).to.eql(pm.collectionVariables.get('username')));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+        "url": "{{baseUrl}}/auth/me"
+      }
+    },
+    {
+      "name": "3 - GET /auth/me sem token (401)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('status 401', () => pm.response.to.have.status(401));",
+              "pm.test('mensagem', () => pm.expect(pm.response.json().message).to.eql('Access Token is required'));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/auth/me"
+      }
+    },
+    {
+      "name": "4 - Login inválido (400)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('status 400', () => pm.response.to.have.status(400));",
+              "pm.test('mensagem', () => pm.expect(pm.response.json().message).to.eql('Invalid credentials'));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"username\": \"{{username}}\",\n  \"password\": \"senhaErrada\"\n}"
+        },
+        "url": "{{baseUrl}}/auth/login"
+      }
+    }
+  ]
+}
