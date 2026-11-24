@@ -16,7 +16,7 @@ Feature: Autenticação - POST /auth/login
     # Act
     When method post
     # Assert: status + campos do corpo + contrato (schema)
-    Then status 200
+    Then status 201
     And match response.username == credentials.username
     And match response.accessToken == '#string'
     And match response == read('classpath:dummyjson/common/schemas/login-response.json')
