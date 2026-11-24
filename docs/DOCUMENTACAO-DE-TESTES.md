@@ -78,7 +78,7 @@ CT02 a CT04 são um único `Scenario Outline` executado com três linhas de dado
 ## 7. Evidências
 
 - **Relatório HTML:** `target/karate-reports/karate-summary.html`, gerado a cada execução, com request, response e asserções de cada passo.
-- **Pipeline:** aba *Actions* do repositório; cada execução guarda o artifact `karate-report` por 14 dias.
+- **Pipeline:** aba *Actions* do repositório; cada execução guarda os artifacts `karate-report-Linux` e `karate-report-Windows` por 14 dias.
 - **Resumo dos testes:** aba *Checks* de cada execução (gerado a partir do JUnit XML).
 
 > Para a entrega, o grupo deve anexar um print do relatório e um print do pipeline verde em `docs/evidencias/`.

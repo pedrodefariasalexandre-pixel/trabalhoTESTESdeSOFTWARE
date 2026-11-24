@@ -37,7 +37,7 @@ Ela cobre o fluxo de autenticação (`POST /auth/login` → `accessToken` → `G
 ├── mvnw / mvnw.cmd                     # Maven Wrapper: roda o Maven sem instalar
 ├── rodar-no-windows.cmd                # Atalho p/ Windows: providencia o Java 21 e roda a suíte
 ├── pom.xml                             # Dependências (Karate, JUnit, Logback) e plugins Maven
-├── .env.example                        # Nomes das variáveis de ambiente aceitas
+├── .env.example                        # Referência das variáveis de ambiente aceitas (exporte no terminal)
 ├── docs/                               # Material da apresentação (roteiro, guia de estudo, plano B...)
 └── src/test/java/
     ├── karate-config.js                # Config global: baseUrl e credenciais via variáveis de ambiente
@@ -115,7 +115,7 @@ Se a máquina já tem Java 21, também funciona direto: `mvnw.cmd test`.
 
 **Um arquivo específico:**
 ```bash
-./mvnw test "-Dkarate.options=classpath:dummyjson/auth/login.feature"
+./mvnw test "-Dkarate.options=src/test/java/dummyjson/auth/login.feature"
 ```
 
 **Ignorando o cenário de defeito conhecido:**
@@ -137,21 +137,21 @@ Linux / macOS:
 ```bash
 export DUMMYJSON_USERNAME=emilys
 export DUMMYJSON_PASSWORD=emilyspass
-mvn test
+./mvnw test
 ```
 
 Windows PowerShell:
 ```powershell
 $env:DUMMYJSON_USERNAME="emilys"
 $env:DUMMYJSON_PASSWORD="emilyspass"
-mvn test
+.\mvnw.cmd test
 ```
 
 Windows CMD:
 ```bat
 set DUMMYJSON_USERNAME=emilys
 set DUMMYJSON_PASSWORD=emilyspass
-mvn test
+mvnw.cmd test
 ```
 
 ## Como ver o relatório
@@ -172,11 +172,11 @@ Também é gerado **JUnit XML** em `target/karate-reports/junit-xml/`, que o CI 
 
 ## CI/CD (GitHub Actions)
 
-O arquivo `.github/workflows/api-tests.yml` roda a cada **push** e **pull request** e também manualmente (aba *Actions* → *API Tests (Karate)* → *Run workflow*, com filtro opcional de tags). Os passos são:
+O arquivo `.github/workflows/api-tests.yml` roda a suíte em **Linux e Windows** (matriz `ubuntu-latest` + `windows-latest`; no Windows ele usa o próprio `rodar-no-windows.cmd`) a cada **push** e **pull request** e também manualmente (aba *Actions* → *API Tests (Karate)* → *Run workflow*, com filtro opcional de tags). Os passos são:
 
 1. Instala o Java 21 com cache do Maven.
 2. Executa `./mvnw test`. Se algum cenário falhar, o job fica **vermelho**.
-3. Publica `target/karate-reports/` como **artifact** `karate-report`. Para baixar: aba *Actions* → abra a execução → seção *Artifacts*.
+3. Publica `target/karate-reports/` como **artifact** `karate-report-Linux` e `karate-report-Windows`. Para baixar: aba *Actions* → abra a execução → seção *Artifacts*.
 4. Publica o resumo dos testes na aba *Checks*.
 
 ## Como a suíte cresce

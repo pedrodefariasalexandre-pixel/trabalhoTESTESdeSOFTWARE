@@ -40,7 +40,7 @@ São os contratos esperados. Os marcadores do Karate fazem o papel de "tipo":
 
 ### `dummyjson/DummyJsonTest.java`
 Único código Java do projeto. Ele usa o `Runner` do Karate para:
-- rodar tudo em `classpath:dummyjson`, exceto `@ignore`
+- rodar tudo na pasta `src/test/java/dummyjson`, exceto `@ignore` (caminho de pasta em vez de `classpath:` porque o `classpath:` de diretório quebra no Windows com `InvalidPathException`)
 - usar **5 threads** em paralelo
 - gerar HTML e **JUnit XML**
 - reprovar o teste JUnit se algum cenário falhar (`assertEquals(0, falhas)`), o que deixa o build/CI vermelho

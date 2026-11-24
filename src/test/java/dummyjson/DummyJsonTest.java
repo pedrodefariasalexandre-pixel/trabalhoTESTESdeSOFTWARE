@@ -21,7 +21,7 @@ class DummyJsonTest {
 
     @Test
     void executarSuiteDeApi() {
-        SuiteResult result = Runner.path("classpath:dummyjson")
+        SuiteResult result = Runner.path("src/test/java/dummyjson")
                 .tags("~@ignore")
                 .outputJunitXml(true)
                 .parallel(5);

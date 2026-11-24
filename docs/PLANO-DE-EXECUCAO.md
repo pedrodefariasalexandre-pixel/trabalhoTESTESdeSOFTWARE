@@ -17,7 +17,7 @@ Tempo total estimado: **~4h30** (dá para dividir entre os integrantes em parale
 
 ## Critério de "pronto"
 - [ ] `./mvnw test` (no Windows: `rodar-no-windows.cmd`) passa em pelo menos 2 máquinas do grupo
-- [ ] Pipeline verde no GitHub com o artifact `karate-report` disponível
+- [ ] Pipeline verde no GitHub (Linux e Windows) com os artifacts `karate-report-*` disponíveis
 - [ ] Slides com o link do repositório
 - [ ] Vídeo da demo + relatório HTML salvos offline (pendrive/drive)
 - [ ] Cada integrante explica a própria parte **e** consegue rodar a demo sozinho

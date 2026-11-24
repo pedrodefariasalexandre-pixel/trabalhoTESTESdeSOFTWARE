@@ -57,12 +57,13 @@ Cada integrante fica com uma parte técnica. **Todos** devem saber rodar a demo 
 
 ### Slide 8 — CI/CD com GitHub Actions *(Pedro)*
 - Roda a cada push e PR, e também manualmente com filtro de tags
-- Passos: Java 21 → `mvn test` → artifact `karate-report` → resumo na aba Checks
+- Matriz Linux + Windows: a mesma suíte roda nos dois sistemas
+- Passos: Java 21 → `./mvnw test` → artifact `karate-report-<SO>` → resumo na aba Checks
 - Teste falhou → pipeline vermelho → o PR não deve ser mergeado (*quality gate*)
 - Mostrar print do pipeline verde e do artifact
 
 ### Slide 9 — Demo ao vivo *(Pedro)*
-- `mvn test` no terminal (logs `200`/`400`/`401`/`500`)
+- `./mvnw test` no terminal (logs `200`/`400`/`401`/`500`)
 - Abrir o `karate-summary.html` → expandir o "GET autenticado" e mostrar request, response e asserções
 - **Bônus:** mudar o `status 200` para `201` e rodar de novo para mostrar a falha e a mensagem clara
 - **Defeito encontrado:** token adulterado retorna **500** em vez de **401**; foi documentado com a tag `@defeito-conhecido`
