@@ -8,7 +8,8 @@ setlocal
 cd /d "%~dp0"
 set "JDK_DIR=%USERPROFILE%\.jdk21-portatil"
 
-java -version 2>&1 | findstr /R /C:"version \"2[1-9]" >nul
+rem Confere se ja existe Java 21+ (o ponto no padrao casa com a aspa antes do numero da versao)
+java -version 2>&1 | findstr /R /C:"version .2[1-9]" >nul
 if %errorlevel%==0 goto rodar
 
 if exist "%JDK_DIR%" goto usarportatil
