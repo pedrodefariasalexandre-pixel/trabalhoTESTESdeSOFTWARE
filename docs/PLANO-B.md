@@ -1,10 +1,10 @@
 # Plano B da demo
 
 ## Preparação (fazer ANTES do dia)
-- [ ] Gravar um **vídeo** de 1–2 min: `mvn test` → abrir o `karate-summary.html` → expandir o GET autenticado
+- [ ] Gravar um **vídeo** de 1–2 min: `./mvnw test` → abrir o `karate-summary.html` → expandir o GET autenticado
 - [ ] Salvar a pasta `target/karate-reports/` de uma execução bem-sucedida (zip) no pendrive **e** no drive
 - [ ] Prints: terminal com "8 passed", relatório, pipeline verde no GitHub, artifact
-- [ ] Rodar `mvn test` uma vez na máquina da apresentação para baixar as dependências (o cache do Maven fica em `~/.m2`)
+- [ ] Rodar `./mvnw test` (Windows: `rodar-no-windows.cmd`) uma vez na máquina da apresentação para baixar as dependências (o cache do Maven fica em `~/.m2`)
 - [ ] Deixar uma execução recente do GitHub Actions verde, com o artifact disponível
 - [ ] Ter **2 integrantes** com o projeto rodando em notebooks diferentes
 
@@ -21,11 +21,11 @@
 ## Execução mínima garantida (sem internet para o Maven)
 Se as dependências já estiverem no cache e só faltar a internet "pesada":
 ```bash
-mvn -o test            # -o = offline, usa só o cache ~/.m2 (ainda precisa acessar a API)
+./mvnw -o test         # -o = offline, usa só o cache ~/.m2 (ainda precisa acessar a API)
 ```
 
 ## Roteiro curto da demo ao vivo (2 min)
-1. `mvn test "-Dkarate.options=--tags @smoke"` (mais rápido, 2 cenários)
+1. `./mvnw test "-Dkarate.options=--tags @smoke"` (mais rápido, 2 cenários)
 2. Mostrar no console: `POST /auth/login 200` → `GET /auth/me 200`
 3. Abrir `target/karate-reports/karate-summary.html` → cenário GET autenticado → request, response e `match`
 4. (Se sobrar tempo) rodar a suíte completa e mostrar o cenário `@defeito-conhecido` (500)

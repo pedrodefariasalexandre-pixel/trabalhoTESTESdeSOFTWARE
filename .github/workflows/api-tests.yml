@@ -21,7 +21,13 @@ concurrency:
 
 jobs:
   api-tests:
-    runs-on: ubuntu-latest
+    # Roda em Linux e em Windows: garante que a suíte funciona nos dois sistemas
+    # (inclusive o rodar-no-windows.cmd usado nos computadores do laboratório).
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
     timeout-minutes: 15
 
     env:
@@ -42,7 +48,8 @@ jobs:
           java-version: '21'
           cache: maven
 
-      - name: Executar testes de API
+      - name: Executar testes de API (Linux)
+        if: runner.os != 'Windows'
         env:
           TAGS: ${{ inputs.tags }}   # via variável (e não direto no script) para evitar script injection
         run: |
@@ -52,11 +59,23 @@ jobs:
             ./mvnw -B test
           fi
 
+      - name: Executar testes de API (Windows, pelo rodar-no-windows.cmd)
+        if: runner.os == 'Windows'
+        shell: cmd
+        env:
+          TAGS: ${{ inputs.tags }}
+        run: |
+          if defined TAGS (
+            call rodar-no-windows.cmd -B "-Dkarate.options=--tags %TAGS%"
+          ) else (
+            call rodar-no-windows.cmd -B
+          )
+
       - name: Publicar relatório HTML do Karate (artifact)
         if: always()          # publica mesmo quando algum teste falha
         uses: actions/upload-artifact@v7
         with:
-          name: karate-report
+          name: karate-report-${{ runner.os }}
           path: target/karate-reports/
           retention-days: 14
 
@@ -64,7 +83,7 @@ jobs:
         if: always()
         uses: dorny/test-reporter@v3
         with:
-          name: Resultado Karate
+          name: Resultado Karate (${{ runner.os }})
           path: target/karate-reports/junit-xml/*.xml
           reporter: java-junit
           fail-on-error: false
